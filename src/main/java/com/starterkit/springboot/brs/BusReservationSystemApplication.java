@@ -7,20 +7,25 @@ import com.starterkit.springboot.brs.repository.bus.*;
 import com.starterkit.springboot.brs.repository.user.RoleRepository;
 import com.starterkit.springboot.brs.repository.user.UserRepository;
 import com.starterkit.springboot.brs.util.DateUtils;
+import de.invesdwin.instrument.DynamicInstrumentationLoader;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableLoadTimeWeaving;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootApplication
+@EnableLoadTimeWeaving
 public class BusReservationSystemApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BusReservationSystemApplication.class, args);
+        DynamicInstrumentationLoader.waitForInitialized(); //dynamically attach java agent to jvm if not already present
+        DynamicInstrumentationLoader.initLoadTimeWeavingContext(); //weave all classes before they are loaded as beans
+        SpringApplication.run(BusReservationSystemApplication.class, args); //start application, load some classes
     }
 
     @Bean
